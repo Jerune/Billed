@@ -20,25 +20,32 @@ export default class NewBill {
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]
-    const formData = new FormData()
-    const email = JSON.parse(localStorage.getItem("user")).email
-    formData.append('file', file)
-    formData.append('email', email)
+    const fileNameArray = fileName.split(".")
+    const fileExtension = fileNameArray[fileNameArray.length-1].toLowerCase()
+    const acceptedExtensions = ['jpg', 'jpeg', 'png']
+    if (acceptedExtensions.some((extension) => fileExtension.includes(extension))){
+      const formData = new FormData()
+      const email = JSON.parse(localStorage.getItem("user")).email
+      formData.append('file', file)
+      formData.append('email', email)
 
-    this.store
-      .bills()
-      .create({
-        data: formData,
-        headers: {
-          noContentType: true
-        }
-      })
-      .then(({fileUrl, key}) => {
-        console.log(fileUrl)
-        this.billId = key
-        this.fileUrl = fileUrl
-        this.fileName = fileName
-      }).catch(error => console.error(error))
+      this.store
+        .bills()
+        .create({
+          data: formData,
+          headers: {
+            noContentType: true
+          }
+        })
+        .then(({fileUrl, key}) => {
+          console.log(fileUrl)
+          this.billId = key
+          this.fileUrl = fileUrl
+          this.fileName = fileName
+        }).catch(error => console.error(error))
+    } else {
+      alert('Les extensions supporté sont jpg, jpeg et png. SVP changez votre Justificatif')
+    }
   }
   handleSubmit = e => {
     e.preventDefault()
@@ -57,8 +64,15 @@ export default class NewBill {
       fileName: this.fileName,
       status: 'pending'
     }
-    this.updateBill(bill)
-    this.onNavigate(ROUTES_PATH['Bills'])
+    const billValues = Object.values(bill)
+    console.log(billValues)
+    console.log(billValues.every((value) => value !== null))
+    if (billValues.every((value) => value !== null)){
+      this.updateBill(bill)
+      this.onNavigate(ROUTES_PATH['Bills'])
+    } else {
+      alert("Votre note de frais n'est pas complet, verifiez les champs svp")
+    }
   }
 
   // not need to cover this function by tests
