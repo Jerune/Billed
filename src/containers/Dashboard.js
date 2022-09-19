@@ -137,6 +137,13 @@ export default class {
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)'})
       $(`#status-bills-container${this.index}`)
         .html(cards(filteredBills(bills, getStatus(this.index))))
+        bills.forEach(bill => {
+          const card = document.getElementById(`open-bill${bill.id}`)
+          if (bill.activeEvent === undefined && card !== null){
+          $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
+          bill.activeEvent = true
+          }
+        })
       this.counter ++
     } else {
       $(`#arrow-icon${this.index}`).css({ transform: 'rotate(90deg)'})
@@ -144,10 +151,6 @@ export default class {
         .html("")
       this.counter ++
     }
-
-    bills.forEach(bill => {
-      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
-    })
 
     return bills
 
