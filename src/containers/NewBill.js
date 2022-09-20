@@ -25,6 +25,7 @@ export default class NewBill {
     const acceptedExtensions = ['jpg', 'jpeg', 'png']
     if (acceptedExtensions.some((extension) => fileExtension.includes(extension))){
       const formData = new FormData()
+      // @ts-ignore
       const email = JSON.parse(localStorage.getItem("user")).email
       formData.append('file', file)
       formData.append('email', email)
@@ -44,12 +45,14 @@ export default class NewBill {
           this.fileName = fileName
         }).catch(error => console.error(error))
     } else {
+      this.document.querySelector(`input[data-testid="file"]`).value = ''
       alert('Les extensions supporté sont jpg, jpeg et png. SVP changez votre Justificatif')
     }
   }
   handleSubmit = e => {
     e.preventDefault()
     console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', e.target.querySelector(`input[data-testid="datepicker"]`).value)
+    // @ts-ignore
     const email = JSON.parse(localStorage.getItem("user")).email
     const bill = {
       email,
