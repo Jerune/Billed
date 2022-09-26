@@ -66,3 +66,28 @@ describe("Given I am connected as an employee", () => {
       expect(mockedBill1Date).toBeTruthy()
     })
   })
+
+  describe("When I click on new bill button", () => {
+    it("Should open a page to create a new bill", () => {
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee'
+      }))
+
+      const billsContainer = new Bills({
+        document, onNavigate, store: mockStore, localStorage: null
+      })
+      document.body.innerHTML = BillsUI({ data: { bills } })
+      const handleClickButton = jest.fn((e) => billsContainer.handleClickNewBill())
+      const newBillButton = screen.getByTestId('btn-new-bill')
+      newBillButton.addEventListener('click', handleClickButton)
+      userEvent.click(newBillButton)
+      expect(handleClickButton).toHaveBeenCalled()
+      expect(screen.getByTestId('form-new-bill')).toBeTruthy()
+    })
+  })
+})
