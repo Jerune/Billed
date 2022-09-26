@@ -1,5 +1,6 @@
 const mockedBills = {
   list() {
+    // Do NOT delete first bill for testing purposes!
     return Promise.resolve([{
       "id": "47qAXb6fIm2zOKkLzMro",
       "vat": "80",
