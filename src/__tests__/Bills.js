@@ -81,13 +81,38 @@ describe("Given I am connected as an employee", () => {
       const billsContainer = new Bills({
         document, onNavigate, store: mockStore, localStorage: null
       })
-      document.body.innerHTML = BillsUI({ data: { bills } })
+      document.body.innerHTML = BillsUI({ data: bills })
       const handleClickButton = jest.fn((e) => billsContainer.handleClickNewBill())
       const newBillButton = screen.getByTestId('btn-new-bill')
       newBillButton.addEventListener('click', handleClickButton)
       userEvent.click(newBillButton)
       expect(handleClickButton).toHaveBeenCalled()
       expect(screen.getByTestId('form-new-bill')).toBeTruthy()
+    })
+  })
+
+  describe("When I click on one of the eye icons", () => {
+    it("Should open the modal and show an image", async () => {
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee'
+      }))
+
+      const billsContainer = new Bills({
+        document, onNavigate, store: mockStore, localStorage: null
+      })
+      document.body.innerHTML = BillsUI({ data: bills })
+      
+      const eyeButtons = screen.getAllByTestId("icon-eye")
+      const handleClickButton = jest.fn(() => billsContainer.handleClickIconEye(eyeButtons[1]))
+      eyeButtons[1].addEventListener('click', handleClickButton)
+      userEvent.click(eyeButtons[1])
+      expect(handleClickButton).toHaveBeenCalled()
+      expect(screen.getByTestId('modaleFile').getAttribute('class')).toContain('show')
     })
   })
 })
