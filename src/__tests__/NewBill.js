@@ -74,12 +74,14 @@ describe("Given I am connected as an employee", () => {
       })
       
       const handleSubmitButton = jest.fn((e) => newBillContainer.handleSubmit(e))
-      const submitButton = screen.getByText("Envoyer")
+      const submitButton = screen.getByText('Envoyer')
+      const errorMessage = screen.getByTestId('error-submit')
       submitButton.addEventListener('click', handleSubmitButton)
       userEvent.click(submitButton)
-      expect(handleSubmitButton).toThrowError()
+      expect(errorMessage.getAttribute('class')).toContain('show')
     })
   })
+
   describe("When I upload a document", () => {
     it("Should show an error when the document does not have a correct extension", () =>{
 
