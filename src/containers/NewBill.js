@@ -45,7 +45,8 @@ export default class NewBill {
           this.fileName = fileName
         }).catch(error => console.error(error))
     } else {
-      this.document.querySelector(`input[data-testid="file"]`).value = ''
+      const fileField = this.document.querySelector(`input[data-testid="file"]`)
+      fileField.value = ''
       alert('Les extensions supporté sont jpg, jpeg et png. SVP changez votre Justificatif')
     }
   }

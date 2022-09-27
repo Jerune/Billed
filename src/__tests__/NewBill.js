@@ -15,34 +15,35 @@ import NewBill from "../containers/NewBill.js"
 import router from "../app/Router.js";
 jest.mock("../app/store", () => mockStore)
 
+beforeAll(() => {
+  Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+  window.localStorage.setItem('user', JSON.stringify({
+    type: 'Employee',
+    email: 'employee@test.tld'
+  }))
+
+  document.body.innerHTML = NewBillUI()
+})
+
 describe("Given I am connected as an employee", () => {
   describe("When I land on NewBill Page", () => {
     it("Should display the form to create a new bill", () => {
-      document.body.innerHTML = NewBillUI()
       const newBillForm = screen.getByTestId('form-new-bill')
       expect(newBillForm).toBeTruthy()
     })
   })
 
   describe("When I click the submit button", () => {
-    it("Should post the form data and navigating to bills page, when submitting with all required data", async () => {
-      
-      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
-      window.localStorage.setItem('user', JSON.stringify({
-        type: 'Employee',
-        email: 'employee@test.tld'
-      }))
-
+    
+    it("Should post the form data and navigating to bills page, when submitting with all required data", () => {
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname })
       }
 
-      document.body.innerHTML = NewBillUI()
-
       const newBillContainer = new NewBill({
         document, onNavigate, store: mockStore, localStorage: localStorageMock
       })
-      
+
       screen.getByTestId('expense-type').value = mockedForm.type
       screen.getByTestId('expense-name').value = mockedForm.name
       screen.getByTestId('datepicker').value = mockedForm.date
@@ -64,25 +65,24 @@ describe("Given I am connected as an employee", () => {
     })
 
     it("Should trigger an error when one of the required fields returns null", () => {
-      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
-      window.localStorage.setItem('user', JSON.stringify({
-        type: 'Employee',
-        email: 'employee@test.tld'
-      }))
-
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname })
       }
-      document.body.innerHTML = NewBillUI()
+
       const newBillContainer = new NewBill({
         document, onNavigate, store: mockStore, localStorage: localStorageMock
       })
-
+      
       const handleSubmitButton = jest.fn((e) => newBillContainer.handleSubmit(e))
       const submitButton = screen.getByText("Envoyer")
       submitButton.addEventListener('click', handleSubmitButton)
       userEvent.click(submitButton)
       expect(handleSubmitButton).toThrowError()
+    })
+  })
+  describe("When I upload a document", () => {
+    it("Should show an error when the document does not have a correct extension", () =>{
+
     })
   })
 })
