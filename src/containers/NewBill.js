@@ -51,18 +51,18 @@ export default class NewBill {
   }
   handleSubmit = e => {
     e.preventDefault()
-    console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', e.target.querySelector(`input[data-testid="datepicker"]`).value)
+    console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', this.document.querySelector(`input[data-testid="datepicker"]`).value)
     // @ts-ignore
     const email = JSON.parse(localStorage.getItem("user")).email
     const bill = {
       email,
-      type: e.target.querySelector(`select[data-testid="expense-type"]`).value,
-      name:  e.target.querySelector(`input[data-testid="expense-name"]`).value,
-      amount: parseInt(e.target.querySelector(`input[data-testid="amount"]`).value),
-      date:  e.target.querySelector(`input[data-testid="datepicker"]`).value,
-      vat: e.target.querySelector(`input[data-testid="vat"]`).value,
-      pct: parseInt(e.target.querySelector(`input[data-testid="pct"]`).value) || 20,
-      commentary: e.target.querySelector(`textarea[data-testid="commentary"]`).value,
+      type: this.document.querySelector(`select[data-testid="expense-type"]`).value,
+      name:  this.document.querySelector(`input[data-testid="expense-name"]`).value,
+      amount: parseInt(this.document.querySelector(`input[data-testid="amount"]`).value),
+      date:  this.document.querySelector(`input[data-testid="datepicker"]`).value,
+      vat: this.document.querySelector(`input[data-testid="vat"]`).value,
+      pct: parseInt(this.document.querySelector(`input[data-testid="pct"]`).value) || 20,
+      commentary: this.document.querySelector(`textarea[data-testid="commentary"]`).value,
       fileUrl: this.fileUrl,
       fileName: this.fileName,
       status: 'pending'
