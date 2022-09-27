@@ -25,7 +25,7 @@ describe("Given I am connected as an employee", () => {
   })
 
   describe("When I click the submit button", () => {
-    it("Should trigger the handleSubmit function, when submitting with all required data", () => {
+    it("Should post the form data and navigating to bills page, when submitting with all required data", async () => {
       
       Object.defineProperty(window, 'localStorage', { value: localStorageMock })
       window.localStorage.setItem('user', JSON.stringify({
@@ -59,6 +59,12 @@ describe("Given I am connected as an employee", () => {
       submitButton.addEventListener('click', handleSubmitButton)
       userEvent.click(submitButton)
       expect(handleSubmitButton).toBeCalled()
+      const billsPageTitle = screen.getByText('Mes notes de frais')
+      expect(billsPageTitle).toBeTruthy()
+    })
+
+    it("Should trigger an error when one of the fields returns null", () => {
+
     })
   })
 })

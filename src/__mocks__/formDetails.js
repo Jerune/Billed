@@ -1,7 +1,7 @@
 const mockedForm = {
     email: "employee@test.tld",
     type: "Transports",
-    name : "",
+    name : "Submit test",
     amount : 123,
     date : "2022-09-28",
     vat : "",
