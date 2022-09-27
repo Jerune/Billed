@@ -63,8 +63,26 @@ describe("Given I am connected as an employee", () => {
       expect(billsPageTitle).toBeTruthy()
     })
 
-    it("Should trigger an error when one of the fields returns null", () => {
+    it("Should trigger an error when one of the required fields returns null", () => {
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee',
+        email: 'employee@test.tld'
+      }))
 
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+      document.body.innerHTML = NewBillUI()
+      const newBillContainer = new NewBill({
+        document, onNavigate, store: mockStore, localStorage: localStorageMock
+      })
+
+      const handleSubmitButton = jest.fn((e) => newBillContainer.handleSubmit(e))
+      const submitButton = screen.getByText("Envoyer")
+      submitButton.addEventListener('click', handleSubmitButton)
+      userEvent.click(submitButton)
+      expect(handleSubmitButton).toThrowError()
     })
   })
 })
