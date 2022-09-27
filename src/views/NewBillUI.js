@@ -56,7 +56,7 @@ export default () => {
                   <div class="col-half">
                     <label for="file" class="bold-label">Justificatif</label>
                     <input required type="file" class="form-control blue-border" data-testid="file" />
-                    <span class="error_message hide" data-testid="error">Les extensions supporté sont jpg, jpeg et png. SVP changez votre Justificatif</span>
+                    <span class="error_message hide" data-testid="error-file">Les extensions supporté sont jpg, jpeg et png. SVP changez votre Justificatif</span>
                   </div>
                 </div>
             </div>
@@ -64,6 +64,7 @@ export default () => {
               <div class="col-md-6">
                 <div class="col-half">
                   <button type="submit" id='btn-send-bill' class="btn btn-primary">Envoyer</button>
+                  <span class="error_message hide" data-testid="error-submit">Votre note de frais n'est pas complet, verifiez les champs svp</span>
                 </div>
               </div>
             </div>

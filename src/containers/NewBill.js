@@ -24,11 +24,11 @@ export default class NewBill {
     const fileNameArray = fileName.split(".")
     const fileExtension = fileNameArray[fileNameArray.length-1].toLowerCase()
     const acceptedExtensions = ['jpg', 'jpeg', 'png']
-    const errorMessage = this.document.querySelector(`span[data-testid="error"]`)
+    const errorMessageFile = this.document.querySelector(`span[data-testid="error-file"]`)
     if (acceptedExtensions.some((extension) => fileExtension.includes(extension))){
-      if(fileField.classList.contains('red-border') && errorMessage.classList.contains('show')){
+      if(fileField.classList.contains('red-border') && errorMessageFile.classList.contains('show')){
         fileField.classList.replace('red-border', 'blue-border')
-        errorMessage.classList.replace('show', 'hide')
+        errorMessageFile.classList.replace('show', 'hide')
       }
       const formData = new FormData()
       // @ts-ignore
@@ -52,14 +52,15 @@ export default class NewBill {
         }).catch(error => console.error(error))
     } else {
       fileField.value = ''
-      if(!fileField.classList.contains('red-border') && !errorMessage.classList.contains('show')){
+      if(!fileField.classList.contains('red-border') && !errorMessageFile.classList.contains('show')){
         fileField.classList.replace('blue-border', 'red-border')
-        errorMessage.classList.replace('hide', 'show')
+        errorMessageFile.classList.replace('hide', 'show')
       }
     }
   }
   handleSubmit = e => {
     e.preventDefault()
+    const errorMessageSubmit = this.document.querySelector(`span[data-testid="error-submit"]`)
     console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', this.document.querySelector(`input[data-testid="datepicker"]`).value)
     // @ts-ignore
     const email = JSON.parse(localStorage.getItem("user")).email
@@ -80,10 +81,15 @@ export default class NewBill {
     console.log(billValues)
     console.log(billValues.every((value) => value !== null))
     if (billValues.every((value) => value !== null)){
+      if(errorMessageSubmit.classList.contains('show')){
+        errorMessageSubmit.classList.replace('show', 'hide')
+      }
       this.updateBill(bill)
       this.onNavigate(ROUTES_PATH['Bills'])
     } else {
-      alert("Votre note de frais n'est pas complet, verifiez les champs svp")
+      if(!errorMessageSubmit.classList.contains('show')){
+        errorMessageSubmit.classList.replace('hide', 'show')
+      }
     }
   }
 
