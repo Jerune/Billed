@@ -17,13 +17,19 @@ export default class NewBill {
   }
   handleChangeFile = e => {
     e.preventDefault()
+    const fileField = this.document.querySelector(`input[data-testid="file"]`)
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]
     const fileNameArray = fileName.split(".")
     const fileExtension = fileNameArray[fileNameArray.length-1].toLowerCase()
     const acceptedExtensions = ['jpg', 'jpeg', 'png']
+    const errorMessage = this.document.querySelector(`span[data-testid="error"]`)
     if (acceptedExtensions.some((extension) => fileExtension.includes(extension))){
+      if(fileField.classList.contains('red-border') && errorMessage.classList.contains('show')){
+        fileField.classList.replace('red-border', 'blue-border')
+        errorMessage.classList.replace('show', 'hide')
+      }
       const formData = new FormData()
       // @ts-ignore
       const email = JSON.parse(localStorage.getItem("user")).email
@@ -45,9 +51,11 @@ export default class NewBill {
           this.fileName = fileName
         }).catch(error => console.error(error))
     } else {
-      const fileField = this.document.querySelector(`input[data-testid="file"]`)
       fileField.value = ''
-      alert('Les extensions supporté sont jpg, jpeg et png. SVP changez votre Justificatif')
+      if(!fileField.classList.contains('red-border') && !errorMessage.classList.contains('show')){
+        fileField.classList.replace('blue-border', 'red-border')
+        errorMessage.classList.replace('hide', 'show')
+      }
     }
   }
   handleSubmit = e => {

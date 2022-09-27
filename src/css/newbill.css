@@ -22,6 +22,13 @@
   border-radius: 5px;
 }
 
+.red-border {
+  opacity: 0.5;
+  border: 2px solid #e50d1b !important;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+
 label {
   font-style: normal;
   font-weight: 500;
@@ -60,4 +67,18 @@ textarea:focus, input:focus, select:focus {
 
 *[placeholder] {
   color: #0E5AE5 !important;
+}
+
+.error_message{
+  font-size: 10px;
+  display: block;
+  color: #e50d1b;
+}
+
+.hide{
+  visibility: hidden;
+}
+
+.show{
+  visibility: visible;
 }
