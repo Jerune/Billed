@@ -19,8 +19,7 @@ export default class NewBill {
     e.preventDefault()
     const fileField = this.document.querySelector(`input[data-testid="file"]`)
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
-    const filePath = e.target.value.split(/\\/g)
-    const fileName = filePath[filePath.length-1]
+    const fileName = file.name
     const fileNameArray = fileName.split(".")
     const fileExtension = fileNameArray[fileNameArray.length-1].toLowerCase()
     const acceptedExtensions = ['jpg', 'jpeg', 'png']
