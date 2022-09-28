@@ -132,5 +132,33 @@ describe("Given I am connected as an employee", () => {
       expect(input.files[0]).toStrictEqual(file)
       expect(errorMessage.getAttribute('class')).toContain('hide')
     })
+
+    it("Should remove the error when a new document is uploaded with a correct extension", async () =>{
+      document.body.innerHTML = NewBillUI()
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+
+      const newBillContainer = new NewBill({
+        document, onNavigate, store: mockStore, localStorage: localStorageMock
+      })
+      
+      const file = new File(["(⌐□_□)"], 'test.pdf', {
+        type: 'application/pdf'
+      })
+      const secondFile = new File(["(⌐□_□)"], 'test.png', {
+        type: 'image/png'
+      })
+      const handleChange = jest.fn((e) => newBillContainer.handleChangeFile(e))
+      const input = screen.getByTestId('file')
+      input.addEventListener('change', handleChange)
+      await waitFor(() => userEvent.upload(input, file))
+      const errorMessage = screen.getByTestId('error-file')
+      expect(handleChange).toHaveBeenCalled()
+      expect(errorMessage.getAttribute('class')).toContain('show')
+      await waitFor(() => userEvent.upload(input, secondFile))
+      expect(handleChange).toHaveBeenCalled()
+      expect(errorMessage.getAttribute('class')).toContain('hide')
+    })
   })
 })
