@@ -28,6 +28,7 @@ beforeAll(() => {
 describe("Given I am connected as an employee", () => {
   describe("When I land on NewBill Page", () => {
     it("Should display the form to create a new bill", () => {
+      document.body.innerHTML = NewBillUI()
       const newBillForm = screen.getByTestId('form-new-bill')
       expect(newBillForm).toBeTruthy()
     })
@@ -36,6 +37,7 @@ describe("Given I am connected as an employee", () => {
   describe("When I click the submit button", () => {
     
     it("Should post the form data and navigating to bills page, when submitting with all required data", () => {
+      document.body.innerHTML = NewBillUI()
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname })
       }
@@ -65,6 +67,7 @@ describe("Given I am connected as an employee", () => {
     })
 
     it("Should trigger an error when one of the required fields returns null", () => {
+      document.body.innerHTML = NewBillUI()
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname })
       }
@@ -83,8 +86,51 @@ describe("Given I am connected as an employee", () => {
   })
 
   describe("When I upload a document", () => {
-    it("Should show an error when the document does not have a correct extension", () =>{
+    
+    it("Should show an error when the document does not have a correct extension", async () =>{
+      document.body.innerHTML = NewBillUI()
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
 
+      const newBillContainer = new NewBill({
+        document, onNavigate, store: mockStore, localStorage: localStorageMock
+      })
+      
+      const file = new File(["(⌐□_□)"], 'test.pdf', {
+        type: 'application/pdf'
+      })
+      const handleChange = jest.fn((e) => newBillContainer.handleChangeFile(e))
+      const input = screen.getByTestId('file')
+      input.addEventListener('change', handleChange)
+      await waitFor(() => userEvent.upload(input, file))
+      const errorMessage = screen.getByTestId('error-file')
+      expect(handleChange).toHaveBeenCalled()
+      expect(input.files[0]).toStrictEqual(file)
+      expect(errorMessage.getAttribute('class')).toContain('show')
+    })
+
+    it("Should not show an error when the document has a correct extension", async () =>{
+      document.body.innerHTML = NewBillUI()
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+
+      const newBillContainer = new NewBill({
+        document, onNavigate, store: mockStore, localStorage: localStorageMock
+      })
+      
+      const file = new File(["(⌐□_□)"], 'test.png', {
+        type: 'image/png'
+      })
+      const handleChange = jest.fn((e) => newBillContainer.handleChangeFile(e))
+      const input = screen.getByTestId('file')
+      input.addEventListener('change', handleChange)
+      await waitFor(() => userEvent.upload(input, file))
+      const errorMessage = screen.getByTestId('error-file')
+      expect(handleChange).toHaveBeenCalled()
+      expect(input.files[0]).toStrictEqual(file)
+      expect(errorMessage.getAttribute('class')).toContain('hide')
     })
   })
 })
