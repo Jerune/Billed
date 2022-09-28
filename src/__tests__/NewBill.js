@@ -21,8 +21,6 @@ beforeAll(() => {
     type: 'Employee',
     email: 'employee@test.tld'
   }))
-
-  document.body.innerHTML = NewBillUI()
 })
 
 describe("Given I am connected as an employee", () => {
